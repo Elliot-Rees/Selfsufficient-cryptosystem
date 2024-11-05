@@ -24,7 +24,7 @@ def run_entropy_analysis(num_iterations: int, csv_filename: str, infinite: bool)
         try:
             iteration = 0
             while infinite or iteration < num_iterations:
-                key_size = 256
+                key_size = 32
                 key = generate_key_windows(key_size)
 
                 entropy = calculate_entropy(key)
@@ -45,9 +45,8 @@ def run_entropy_analysis(num_iterations: int, csv_filename: str, infinite: bool)
                     plt.xlabel("Entropy (bits)")
                     plt.ylabel("Frequency")
                     plt.gca().xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.3f}'))
-                    plt.pause(0.0001)
-                time.sleep(0)   
-        
+                    plt.pause(0.000000001)
+                time.sleep(0)
         except KeyboardInterrupt:
             print("\nProcess interrupted by user. Finalizing and saving results...")
             quit
