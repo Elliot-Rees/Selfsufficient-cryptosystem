@@ -15,43 +15,33 @@ class Yarrow:
         self.entropy_threshold_slow = entropy_threshold_slow
         
         # State: Initialization with some entropy
-        self.state = self.get_windows_entropy(32)  # Initial state (256-bit for security)
+        self.state = self.get_bcrypt_entropy(32)  # Initial state (256-bit for security)
         
         # Counter to keep track of outputs
         self.counter = 0
     
-    def get_windows_entropy(self, num_bytes):
+    def get_bcrypt_entropy(self, num_bytes):
         """
-        Collect entropy using the Windows CryptGenRandom API.
+        Collect entropy using the Windows Bcrypt library.
         """
-        # Load advapi32.dll
-        advapi32 = ctypes.windll.advapi32
-
-        # Set up the cryptographic provider
-        hCryptProv = wintypes.HANDLE()
-        if not advapi32.CryptAcquireContextW(
-                ctypes.byref(hCryptProv), None, None, 1, 0xF0000000):
-            raise RuntimeError("Cryptographic context could not be acquired.")
-
-        # Buffer for random data
+        # Load bcrypt.dll
+        bcrypt = ctypes.windll.bcrypt
+        
+        # Define buffer to hold random bytes
         buffer = (ctypes.c_ubyte * num_bytes)()
         
-        # Call CryptGenRandom to fill the buffer
-        if not advapi32.CryptGenRandom(hCryptProv, num_bytes, ctypes.byref(buffer)):
-            advapi32.CryptReleaseContext(hCryptProv, 0)
-            raise RuntimeError("Entropy could not be collected from CryptGenRandom.")
-        
-        # Release the cryptographic provider handle
-        advapi32.CryptReleaseContext(hCryptProv, 0)
+        # Call BCryptGenRandom to fill the buffer
+        if bcrypt.BCryptGenRandom(None, ctypes.byref(buffer), num_bytes, 0x02) != 0:
+            raise RuntimeError("Entropy could not be collected using BCryptGenRandom.")
         
         # Convert buffer to bytes and return
         return bytes(buffer)
 
     def add_entropy(self):
         """
-        Adds entropy to both fast and slow pools using Windows API.
+        Adds entropy to both fast and slow pools using BCryptGenRandom.
         """
-        data = self.get_windows_entropy(32)  # 256-bit entropy chunk
+        data = self.get_bcrypt_entropy(32)  # 256-bit entropy chunk
         self.fast_pool.append(data)
         if len(self.fast_pool) >= self.entropy_threshold_fast:
             self.reseed('fast')
@@ -93,7 +83,7 @@ class Yarrow:
 # Example Usage of the Yarrow Algorithm
 yarrow = Yarrow()
 
-# Collect entropy using Windows API
+# Collect entropy using BcryptGenRandom
 yarrow.add_entropy()
 yarrow.add_entropy()
 

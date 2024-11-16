@@ -1,9 +1,8 @@
 """
-Why did the cryptographically secure random number generator go to therapy?
+Why did the random number generator go to therapy?
 
 It couldn’t handle the pressure of always being unpredictable!
 """
-
 
 import tkinter as tk
 from tkinter import filedialog, messagebox
