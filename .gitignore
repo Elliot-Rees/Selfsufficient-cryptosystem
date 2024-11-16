@@ -1,3 +1,4 @@
+.gitignore
 out.csv
 __pycache__
 .gitignore
