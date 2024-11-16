@@ -32,4 +32,4 @@ The Yarrow algorithm combines entropy collection, mixing, and deterministic gene
 ## Apendix
 
 - Entropy collected using the Windows Cryptographic Primitives Library (Bcrypt.dll)
-- [text](https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp4825.pdf)
+- [FIPS 140 Cryptographic Primatives Library Vallidation](https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp4825.pdf)
