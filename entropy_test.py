@@ -1,10 +1,11 @@
 import math
+import ctypes
 import csv
 import argparse
 import time
 import signal
 from collections import Counter
-from csprng_module import generate_key_windows
+from Yarrow import yarrow
 import matplotlib.pyplot as plt
 
 def calculate_entropy(key: bytes) -> float:
@@ -24,8 +25,8 @@ def run_entropy_analysis(num_iterations: int, csv_filename: str, infinite: bool)
         try:
             iteration = 0
             while infinite or iteration < num_iterations:
-                key_size = 32
-                key = generate_key_windows(key_size)
+                key_size = 256
+                key = yarrow(key_size)
 
                 entropy = calculate_entropy(key)
 
@@ -45,7 +46,7 @@ def run_entropy_analysis(num_iterations: int, csv_filename: str, infinite: bool)
                     plt.xlabel("Entropy (bits)")
                     plt.ylabel("Frequency")
                     plt.gca().xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:.3f}'))
-                    plt.pause(0.000000001)
+                    plt.pause(10)
                 time.sleep(0)
         except KeyboardInterrupt:
             print("\nProcess interrupted by user. Finalizing and saving results...")
