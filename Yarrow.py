@@ -80,7 +80,6 @@ class Yarrow:
         output = hmac.new(self.state, self.counter.to_bytes(8, 'big'), hashlib.sha256).digest()
         return output[:num_bytes]
 
-# Example Usage of the Yarrow Algorithm
 yarrow = Yarrow()
 
 # Collect entropy using BcryptGenRandom
