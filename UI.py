@@ -54,7 +54,7 @@ def encrypt_message():
     message_entry = tk.Entry(encryption_window, width=40)
     message_entry.pack(pady=5)
 
-    def encrypt():
+    def encrypt(): # FOR TESTING
         message = message_entry.get()
         encrypted_message = "".join(chr(ord(char) + 3) for char in message)  # Simple Caesar cipher
         messagebox.showinfo("Encrypted Message", f"Encrypted Message:\n{encrypted_message}")

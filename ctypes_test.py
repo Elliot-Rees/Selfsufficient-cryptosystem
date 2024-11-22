@@ -1,3 +1,6 @@
+"""
+Test required windows api access
+"""
 import ctypes
 import ctypes.wintypes
 

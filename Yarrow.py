@@ -20,10 +20,8 @@ class Yarrow:
         # Counter to keep track of outputs
         self.counter = 0
     
-    def get_bcrypt_entropy(self, num_bytes):
-        """
-        Collect entropy using the Windows Bcrypt library.
-        """
+    def get_bcrypt_entropy(self, num_bytes): # Collect entropy using the Windows Bcrypt library
+        
         # Load bcrypt.dll
         bcrypt = ctypes.windll.bcrypt
         
@@ -37,10 +35,8 @@ class Yarrow:
         # Convert buffer to bytes and return
         return bytes(buffer)
 
-    def add_entropy(self):
-        """
-        Adds entropy to both fast and slow pools using BCryptGenRandom.
-        """
+    def add_entropy(self): # Adds entropy to fast and slow pools
+    
         data = self.get_bcrypt_entropy(32)  # 256-bit entropy chunk
         self.fast_pool.append(data)
         if len(self.fast_pool) >= self.entropy_threshold_fast:
@@ -50,10 +46,8 @@ class Yarrow:
         if len(self.slow_pool) >= self.entropy_threshold_slow:
             self.reseed('slow')
     
-    def reseed(self, pool_type):
-        """
-        Reseeds the state with entropy from the specified pool.
-        """
+    def reseed(self, pool_type): # Reseeds the state with entropy from the specified pool
+
         if pool_type == 'fast' and len(self.fast_pool) >= self.entropy_threshold_fast:
             entropy = b''.join(self.fast_pool)
             self.fast_pool.clear()
@@ -73,7 +67,7 @@ class Yarrow:
         """
         # Increment the counter and perform reseed if necessary
         self.counter += 1
-        if self.counter > 100000000000000:  # Arbitrary reseed interval
+        if self.counter > 100:  # Arbitrary reseed interval
             self.reseed('fast')
         
         # Create an HMAC of the state and counter for random output

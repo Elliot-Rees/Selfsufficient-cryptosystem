@@ -37,6 +37,10 @@ The Yarrow algorithm combines entropy collection, mixing, and deterministic gene
 - Windows 11 Pro 21H2
 - OS Build 22000.194
 
+## Usage
+
+
+
 # License
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
