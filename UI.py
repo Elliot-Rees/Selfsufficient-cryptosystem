@@ -8,7 +8,7 @@ from tkinter import filedialog, messagebox
 import json
 import csv
 from Yarrow import Yarrow
-from scan import scan  # Assuming scan is a separate module for scanning drives
+from scan import scan
 
 # Initialize the Yarrow instance
 yarrow = Yarrow()
@@ -151,7 +151,7 @@ encrypt_button = tk.Button(root, text="Encrypt Message", command=encrypt_message
 encrypt_button.pack(pady=10)
 
 # Add button for scanning and decrypting
-tk.Button(root, text="Scan for Key and Decrypt", command=scan_for_key_and_decrypt).pack(pady=10)
+tk.Button(root, text="Scan for Key", command=scan_for_key_and_decrypt).pack(pady=10)
 
 # Start the application
 root.mainloop()
