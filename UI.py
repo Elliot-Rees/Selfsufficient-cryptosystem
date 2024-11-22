@@ -3,12 +3,12 @@ Why did the random number generator go to therapy?
 
 It couldn’t handle the pressure of always being unpredictable!
 """
-
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import json
 import csv
-from Yarrow import Yarrow  
+from Yarrow import Yarrow
+from scan import scan  # Assuming scan is a separate module for scanning drives
 
 # Initialize the Yarrow instance
 yarrow = Yarrow()
@@ -45,21 +45,68 @@ def export_keys(keys, export_format):
     if file_path:
         messagebox.showinfo("Export Successful", f"Keys exported successfully to {file_path}!")
 
-# Function to enable encryption (mock functionality for demonstration)
+# Function to enable encryption
 def encrypt_message():
     encryption_window = tk.Toplevel(root)
     encryption_window.title("Encrypt Message")
+    encryption_window.geometry("400x200")
 
     tk.Label(encryption_window, text="Enter Message to Encrypt:").pack(pady=5)
     message_entry = tk.Entry(encryption_window, width=40)
     message_entry.pack(pady=5)
 
-    def encrypt(): # FOR TESTING
+    def encrypt():
         message = message_entry.get()
-        encrypted_message = "".join(chr(ord(char) + 3) for char in message)  # Simple Caesar cipher
-        messagebox.showinfo("Encrypted Message", f"Encrypted Message:\n{encrypted_message}")
+        if message:
+            encrypted_message = "".join(chr(ord(char) + 3) for char in message)  # Simple Caesar cipher
+            messagebox.showinfo("Encrypted Message", f"Encrypted Message:\n{encrypted_message}")
+        else:
+            messagebox.showwarning("Input Required", "Please enter a message to encrypt.")
 
     tk.Button(encryption_window, text="Encrypt", command=encrypt).pack(pady=10)
+
+# Function to toggle encryption button state
+def toggle_encrypt_button():
+    if encrypt_var.get():
+        encrypt_button.config(state="normal")
+    else:
+        encrypt_button.config(state="disabled")
+
+# Function to handle scanning for keys and decrypting message.txt if key with "#" is found
+def scan_for_key_and_decrypt():
+    try:
+        # Call the scan function from the 'scan' module and retrieve the key
+        key_info = scan()  # Assuming scan() returns the key with a '#' appended if applicable
+
+        if key_info:
+            key = key_info.get('key', '')
+            if '#' in key:
+                decrypted_message = xor_decrypt_with_key(key)
+                if decrypted_message:
+                    messagebox.showinfo("Decrypted Message", f"Decrypted Message:\n{decrypted_message}")
+                else:
+                    messagebox.showerror("Decryption Failed", "Failed to decrypt message.txt.")
+            else:
+                messagebox.showinfo("Key Found", f"Key found: {key}\nNo decryption needed.")
+        else:
+            messagebox.showwarning("No Key Found", "No valid key was found on the drives.")
+
+    except Exception as e:
+        messagebox.showerror("Error", f"An error occurred during scanning: {str(e)}")
+
+# Function to XOR the contents of message.txt with the key
+def xor_decrypt_with_key(key):
+    try:
+        # Read the contents of message.txt
+        with open("message.txt", "r") as message_file:
+            message = message_file.read()
+
+        # Perform XOR between each character of the message and the key
+        decrypted_message = ''.join(chr(ord(char) ^ ord(key[i % len(key)])) for i, char in enumerate(message))
+        return decrypted_message
+    except Exception as e:
+        print(f"Error during decryption: {e}")
+        return None
 
 # Main UI setup
 root = tk.Tk()
@@ -84,7 +131,7 @@ tk.Radiobutton(root, text="CSV", variable=export_format_var, value="CSV").pack()
 
 # Encryption option
 encrypt_var = tk.BooleanVar(value=False)
-tk.Checkbutton(root, text="Enable Message Encryption", variable=encrypt_var).pack(pady=10)
+tk.Checkbutton(root, text="Enable Message Encryption", variable=encrypt_var, command=toggle_encrypt_button).pack(pady=10)
 
 # Generate and export keys
 keys = []
@@ -100,7 +147,11 @@ def generate_and_export():
 
 # Main buttons
 tk.Button(root, text="Generate and Export Keys", command=generate_and_export).pack(pady=10)
-tk.Button(root, text="Encrypt Message", command=encrypt_message, state="normal" if encrypt_var.get() else "disabled").pack(pady=10)
+encrypt_button = tk.Button(root, text="Encrypt Message", command=encrypt_message, state="disabled")
+encrypt_button.pack(pady=10)
+
+# Add button for scanning and decrypting
+tk.Button(root, text="Scan for Key and Decrypt", command=scan_for_key_and_decrypt).pack(pady=10)
 
 # Start the application
 root.mainloop()
