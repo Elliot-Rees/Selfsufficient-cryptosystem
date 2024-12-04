@@ -62,9 +62,6 @@ class Yarrow:
         self.counter = 0  # Reset counter after reseed
         
     def generate_random(self, num_bytes=32):
-        """
-        Generate cryptographically secure random bytes.
-        """
         # Increment the counter and perform reseed if necessary
         self.counter += 1
         if self.counter > 100:  # Arbitrary reseed interval
