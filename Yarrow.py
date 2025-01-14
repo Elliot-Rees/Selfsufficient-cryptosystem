@@ -79,4 +79,4 @@ yarrow.add_entropy()
 
 # Generate a random 32-byte number
 random_number = yarrow.generate_random()
-#print("Random number:", random_number.hex())
+print("Random number:", random_number.hex())

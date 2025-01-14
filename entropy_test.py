@@ -9,7 +9,7 @@ import argparse
 import time
 import signal
 from collections import Counter
-from Yarrow import yarrow
+from Yarrow import Yarrow
 import matplotlib.pyplot as plt
 
 def calculate_entropy(key: bytes) -> float:
