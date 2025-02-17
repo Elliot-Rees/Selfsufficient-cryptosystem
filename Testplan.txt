@@ -1,0 +1,144 @@
+Test Plan 
+
+Scope
+
+    Functionality Testing: Validate the generator produces outputs that meet specifications.
+    Statistical Randomness Testing: Assess the statistical properties of the generated values.
+    Edge Case Testing: Test boundary conditions, including extremes of input ranges.
+    Performance Testing: Measure speed and efficiency of the generator.
+    Security Testing: Verify the PRNG meets cryptographic requirements for secure applications.
+
+Test Environment
+
+    Hardware: AMD Ryzen 7 3700u, 16GB DDR4 
+    Software: Microsoft Windows 11 Pro 21H2 (OS Build 22000.194), Python 3.12, requirements.txt
+    Test Tools:
+        NIST Statistical Test Suite (NIST STS)
+
+Test Cases
+1. Functionality Testing
+
+    TC1: Uniform Distribution
+        Objective: Ensure numbers are uniformly distributed over the output range.
+        Steps:
+            Generate a large set of numbers.
+            Divide the range into equal intervals and count occurrences.
+            Validate that occurrences in each interval are approximately equal.
+        Expected Result: Deviation from mean is within acceptable limits.
+        Tool:
+        Method: Use script to call generate_random function, collect output value and plot distrobution
+
+    TC2: Reproducibility
+        Objective: Ensure reproducibility when using the same seed.
+        Steps:
+            Initialize the generator with a fixed seed.
+            Generate a sequence.
+            Repeat the process with the same seed.
+            Compare results.
+        Expected Result: Sequences are identical.
+        Tool:
+        Method:
+
+    TC3: Range Validation
+        Objective: Verify numbers fall within the specified range.
+        Steps:
+            Set a range [a, b].
+            Generate numbers repeatedly.
+            Check if all outputs satisfy a≤x≤ba≤x≤b.
+        Expected Result: All numbers lie within the range.
+        Tool:
+        Method: 
+
+2. Statistical Randomness Testing
+
+    TC4: Chi-Square Test
+        Objective: Evaluate uniformity of output.
+        Steps:
+            Generate a large sequence.
+            Apply the Chi-square test.
+        Expected Result: P-value indicates uniformity.
+        Tool: NIST STS
+        Method: Generate Values and apply results to Chi-square test
+
+    TC5: Autocorrelation Test
+        Objective: Assess independence of numbers.
+        Steps:
+            Generate a sequence.
+            Compute correlations between numbers at fixed lags.
+        Expected Result: No significant autocorrelation.
+        Tool: NIST STS
+        Method:
+
+    TC6: Runs Test
+        Objective: Check randomness of sequences of increasing/decreasing numbers.
+        Steps:
+            Generate numbers.
+            Apply runs test.
+        Expected Result: Runs distribution matches expected.
+        Tool: NIST STS
+        Method:
+
+3. Edge Case Testing
+
+    TC7: Zero Seed
+        Objective: Validate behavior with a seed of zero.
+        Steps:
+            Initialize the generator with a zero seed.
+            Generate numbers.
+        Expected Result: No crashes, sequence is valid.
+        Tool:
+        Method:
+
+    TC8: Large Seed Value
+        Objective: Test behavior with very large seeds.
+        Steps:
+            Use a seed near the maximum supported value.
+            Generate numbers.
+        Expected Result: PRNG works as expected.
+        Tool:
+        Method:
+
+4. Performance Testing
+
+    TC9: Throughput
+        Objective: Measure the time taken to generate a large sequence.
+        Steps:
+            Generate NN numbers.
+            Record the time taken.
+        Expected Result: Time meets performance criteria.
+        Tool:
+        Method:
+
+    TC10: Initialization Time
+        Objective: Measure time required for generator initialization.
+        Steps:
+            Initialize the generator repeatedly.
+            Record average initialization time.
+        Expected Result: Initialization is within acceptable bounds.
+        Tool:
+        Method:
+
+5. Security Testing 
+
+    TC11: Entropy Testing
+        Objective: Verify high entropy in output.
+        Steps:
+            Generate a sequence.
+            Measure entropy using entropy tools.
+        Expected Result: Entropy value is close to theoretical maximum.
+        Tool:
+        Method:
+
+    TC12: Predictability Test
+        Objective: Ensure output cannot be predicted even with partial knowledge.
+        Steps:
+            Analyze sequences with prediction algorithms.
+        Expected Result: No successful prediction patterns.
+        Tool:
+        Method:
+
+Metrics
+
+    Statistical Tests: Pass/fail rates. 
+    Performance: Time per operation operations/second.
+    Edge Cases: Correct handling of special inputs without crashes or unexpected behavior.
